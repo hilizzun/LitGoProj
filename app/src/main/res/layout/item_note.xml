@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="16dp">
+
+    <!-- Book Cover -->
+    <ImageView
+        android:id="@+id/noteCoverImageView"
+        android:layout_width="57dp"
+        android:layout_height="77dp"
+        android:scaleType="centerCrop"
+        android:background="@drawable/bg_book_cover" />
+
+    <!-- Note Info -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_marginStart="16dp">
+
+        <!-- Date -->
+        <TextView
+            android:id="@+id/dateTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="7.09.2023 в 12:03"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="#203D43"
+            android:fontFamily="@font/nunito_bold" />
+
+        <!-- Book Name -->
+        <TextView
+            android:id="@+id/noteBookNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Мастер и Маргарита"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="#203D43"
+            android:fontFamily="@font/nunito_bold"
+            android:layout_marginTop="4dp" />
+
+        <!-- Pages Read -->
+        <TextView
+            android:id="@+id/pagesReadTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="20 страниц"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#ffaf1a"
+            android:fontFamily="@font/nunito_extrabold"
+            android:layout_marginTop="8dp" />
+
+    </LinearLayout>
+
+    <!-- Delete Button -->
+    <ImageView
+        android:id="@+id/deleteNoteButton"
+        android:layout_width="17dp"
+        android:layout_height="17dp"
+        android:src="@drawable/ic_delete"
+        android:layout_gravity="top" />
+
+</LinearLayout>

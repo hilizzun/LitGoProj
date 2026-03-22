@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="16dp"
+    android:background="?android:attr/selectableItemBackground">
+
+    <!-- Обложка книги -->
+    <ImageView
+        android:id="@+id/coverImageView"
+        android:layout_width="57dp"
+        android:layout_height="77dp"
+        android:scaleType="centerCrop"
+        android:background="@drawable/bg_book_cover"
+        android:contentDescription="@string/book_cover" />
+
+    <!-- Информация о книге -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_marginStart="16dp">
+
+        <!-- Название -->
+        <TextView
+            android:id="@+id/titleTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary"
+            android:fontFamily="@font/nunito_bold"
+            android:maxLines="2"
+            android:ellipsize="end" />
+
+        <!-- Автор -->
+        <TextView
+            android:id="@+id/authorTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:textColor="@color/text_secondary"
+            android:fontFamily="@font/nunito_medium"
+            android:layout_marginTop="4dp" />
+
+        <!-- Жанр и статус -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <TextView
+                android:id="@+id/genreTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:background="@drawable/bg_genre"
+                android:paddingHorizontal="10dp"
+                android:gravity="center"
+                android:textSize="10sp"
+                android:fontFamily="@font/nunito_light" />
+
+            <TextView
+                android:id="@+id/statusTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:background="@drawable/bg_status"
+                android:paddingHorizontal="10dp"
+                android:gravity="center"
+                android:textSize="10sp"
+                android:fontFamily="@font/nunito_light"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
+
+        <!-- Прогресс чтения -->
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_marginTop="8dp"
+            android:progressTint="@color/primary"
+            android:progressBackgroundTint="@color/surface" />
+
+        <!-- Процент -->
+        <TextView
+            android:id="@+id/progressPercentTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10sp"
+            android:textColor="@color/text_secondary"
+            android:layout_marginTop="2dp" />
+    </LinearLayout>
+
+    <!-- Кнопка удаления -->
+    <ImageView
+        android:id="@+id/deleteButton"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_delete"
+        android:contentDescription="@string/delete_book"
+        android:layout_gravity="top"
+        android:padding="4dp"
+        android:background="?android:attr/selectableItemBackgroundBorderless"/>
+
+</LinearLayout>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#FFAF1A</color>
+    <color name="primary_dark">#E69D15</color>
+    <color name="text_primary">#203D43</color>
+    <color name="text_secondary">#6E6A7C</color>
+    <color name="background">#FFFFFF</color>
+    <color name="surface">#F5F5F5</color>
+
+    <color name="genre_roman">#CFFFAA</color>
+    <color name="genre_antitutopia">#AAE3FF</color>
+    <color name="status_reading">#F2CCF3</color>
+    <color name="status_read">#8CB0FF</color>
+    <color name="status_planned">#E7CCF3</color>
+</resources>

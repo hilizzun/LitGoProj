@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Back Button + Logo -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_back" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_logo"
+                android:layout_marginStart="97dp" />
+        </LinearLayout>
+
+        <!-- Book Cover -->
+        <ImageView
+            android:id="@+id/bookCoverImageView"
+            android:layout_width="match_parent"
+            android:layout_height="301dp"
+            android:scaleType="centerCrop"
+            android:background="@drawable/bg_book_cover"
+            android:layout_marginTop="16dp" />
+
+        <!-- Book Title -->
+        <TextView
+            android:id="@+id/bookTitleTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Мастер и Маргарита"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary"
+            android:layout_marginTop="16dp" />
+
+        <!-- Author -->
+        <TextView
+            android:id="@+id/authorTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Михаил Булгаков"
+            android:textSize="24sp"
+            android:textColor="@color/text_primary"
+            android:layout_marginTop="8dp" />
+
+        <!-- Description -->
+        <TextView
+            android:id="@+id/descriptionTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Мистический роман..."
+            android:textSize="12sp"
+            android:textColor="@color/text_primary"
+            android:layout_marginTop="16dp" />
+
+        <!-- Year -->
+        <TextView
+            android:id="@+id/yearTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1967 г"
+            android:textSize="12sp"
+            android:layout_marginTop="8dp" />
+
+        <!-- Genre & Status -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                android:id="@+id/genreTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="34dp"
+                android:text="Роман"
+                android:background="@drawable/bg_genre"
+                android:gravity="center"
+                android:paddingHorizontal="10dp" />
+
+            <TextView
+                android:id="@+id/statusTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="34dp"
+                android:text="Читаю"
+                android:background="@drawable/bg_status"
+                android:gravity="center"
+                android:paddingHorizontal="10dp"
+                android:layout_marginStart="16dp" />
+        </LinearLayout>
+
+        <!-- Review Section -->
+        <EditText
+            android:id="@+id/reviewEditText"
+            android:layout_width="match_parent"
+            android:layout_height="137dp"
+            android:background="@drawable/bg_review"
+            android:hint="Ваш отзыв..."
+            android:padding="16dp"
+            android:gravity="top"
+            android:layout_marginTop="16dp" />
+
+        <!-- Rating -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Моя оценка: "
+                android:textSize="15sp" />
+
+            <RatingBar
+                android:id="@+id/ratingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:numStars="5"
+                android:rating="5"
+                android:progressTint="@color/primary" />
+        </LinearLayout>
+
+        <!-- Page Counter -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="24dp">
+
+            <Button
+                android:id="@+id/decrementButton"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:text="-"
+                android:background="@drawable/bg_circle_button" />
+
+            <TextView
+                android:id="@+id/pageCounterTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Текущая страница: 205 / 390"
+                android:gravity="center"
+                android:textSize="15sp" />
+
+            <Button
+                android:id="@+id/incrementButton"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:text="+"
+                android:background="@drawable/bg_circle_button" />
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

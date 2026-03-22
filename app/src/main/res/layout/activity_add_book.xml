@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Title -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Новая книга"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:textColor="#203D43"
+            android:fontFamily="@font/nunito_extrabold" />
+
+        <!-- Search API -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:orientation="horizontal"
+            android:background="@drawable/bg_search"
+            android:padding="12dp"
+            android:layout_marginTop="16dp">
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:hint="Автоматический поиск через API"
+                android:background="@null"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_search" />
+        </LinearLayout>
+
+        <!-- Title Input -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Название произведения"
+            android:textSize="12sp"
+            android:textColor="#000000"
+            android:fontFamily="@font/nunito_medium"
+            android:layout_marginTop="16dp" />
+
+        <EditText
+            android:id="@+id/titleEditText"
+            android:layout_width="match_parent"
+            android:layout_height="39dp"
+            android:background="@drawable/bg_search"
+            android:padding="10dp"
+            android:layout_marginTop="4dp" />
+
+        <!-- Author Input -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Автор"
+            android:textSize="12sp"
+            android:textColor="#000000"
+            android:fontFamily="@font/nunito_medium"
+            android:layout_marginTop="16dp" />
+
+        <EditText
+            android:id="@+id/authorEditText"
+            android:layout_width="match_parent"
+            android:layout_height="39dp"
+            android:background="@drawable/bg_search"
+            android:padding="10dp"
+            android:layout_marginTop="4dp" />
+
+        <!-- Year Input -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Год написания"
+            android:textSize="12sp"
+            android:textColor="#000000"
+            android:fontFamily="@font/nunito_medium"
+            android:layout_marginTop="16dp" />
+
+        <EditText
+            android:id="@+id/yearEditText"
+            android:layout_width="match_parent"
+            android:layout_height="39dp"
+            android:background="@drawable/bg_search"
+            android:padding="10dp"
+            android:layout_marginTop="4dp" />
+
+        <!-- Cover Upload -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Обложка книги"
+            android:textSize="12sp"
+            android:textColor="#000000"
+            android:fontFamily="@font/nunito_medium"
+            android:layout_marginTop="16dp" />
+
+        <Button
+            android:id="@+id/uploadCoverButton"
+            android:layout_width="148dp"
+            android:layout_height="76dp"
+            android:text="Выбрать файл"
+            android:backgroundTint="#ededed"
+            android:textColor="#000000"
+            android:textSize="12sp"
+            android:fontFamily="@font/nunito_medium"
+            android:layout_marginTop="4dp" />
+
+        <!-- Description Input -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Краткое описание"
+            android:textSize="12sp"
+            android:textColor="#000000"
+            android:fontFamily="@font/nunito_medium"
+            android:layout_marginTop="16dp" />
+
+        <EditText
+            android:id="@+id/descriptionEditText"
+            android:layout_width="match_parent"
+            android:layout_height="109dp"
+            android:background="@drawable/bg_search"
+            android:padding="10dp"
+            android:gravity="top"
+            android:layout_marginTop="4dp" />
+
+        <!-- Pages Count -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Количество страниц"
+            android:textSize="12sp"
+            android:textColor="#000000"
+            android:fontFamily="@font/nunito_medium"
+            android:layout_marginTop="16dp" />
+
+        <EditText
+            android:id="@+id/pagesEditText"
+            android:layout_width="match_parent"
+            android:layout_height="39dp"
+            android:background="@drawable/bg_search"
+            android:padding="10dp"
+            android:layout_marginTop="4dp" />
+
+        <!-- Genre Selector -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Выбрать жанр"
+            android:textSize="12sp"
+            android:textColor="#000000"
+            android:fontFamily="@font/nunito_medium"
+            android:layout_marginTop="16dp" />
+
+        <Spinner
+            android:id="@+id/genreSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="39dp"
+            android:background="@drawable/bg_search"
+            android:layout_marginTop="4dp" />
+
+        <!-- Submit Button -->
+        <Button
+            android:id="@+id/submitButton"
+            android:layout_width="match_parent"
+            android:layout_height="51dp"
+            android:text="Добавить книгу"
+            android:backgroundTint="#ffaf1a"
+            android:textColor="#FFFFFF"
+            android:textSize="19sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/nunito_semibold"
+            android:layout_marginTop="24dp" />
+
+    </LinearLayout>
+</ScrollView>

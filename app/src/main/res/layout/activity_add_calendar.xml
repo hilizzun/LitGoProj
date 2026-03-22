@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Title -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Создание записи"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:textColor="#203D43"
+            android:fontFamily="@font/nunito_extrabold" />
+
+        <!-- Calendar Widget -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="284dp"
+            android:text="Calendar Widget"
+            android:gravity="center"
+            android:background="@drawable/bg_search"
+            android:layout_marginTop="16dp" />
+
+        <!-- Select Book Label -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Выберите книгу из коллекции:"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#203D43"
+            android:fontFamily="@font/nunito_bold"
+            android:layout_marginTop="16dp" />
+
+        <!-- Search Book -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:orientation="horizontal"
+            android:background="@drawable/bg_search"
+            android:padding="12dp"
+            android:layout_marginTop="8dp">
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:hint="Мастер и Мар"
+                android:background="@null"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_search" />
+        </LinearLayout>
+
+        <!-- Book Card -->
+        <include layout="@layout/item_book" />
+
+        <!-- Pages Read -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Прочитано страниц: "
+                android:textSize="14sp"
+                android:textColor="#203D43" />
+
+            <EditText
+                android:layout_width="55dp"
+                android:layout_height="39dp"
+                android:background="@drawable/bg_search"
+                android:gravity="center"
+                android:text="24"
+                android:textSize="16sp"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
+
+        <!-- Submit Button -->
+        <Button
+            android:id="@+id/submitButton"
+            android:layout_width="135dp"
+            android:layout_height="35dp"
+            android:text="Подтвердить"
+            android:backgroundTint="#ffaf1a"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/nunito_semibold"
+            android:layout_marginTop="24dp" />
+
+    </LinearLayout>
+</ScrollView>

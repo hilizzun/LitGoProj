@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">LitGo</string>
+
+    <!-- Welcome Screen -->
+    <string name="welcome_description">Умный читательский дневник, который превращает чтение в увлекательное путешествие</string>
+    <string name="start">Начать</string>
+
+    <!-- Collection Screen -->
+    <string name="my_collection">Моя коллекция</string>
+    <string name="search_hint">Моя книга...</string>
+    <string name="tab_all">Все</string>
+    <string name="tab_reading">Читаю</string>
+    <string name="tab_read">Прочитано</string>
+    <string name="tab_planned">В планах</string>
+
+    <!-- Other Screens -->
+    <string name="new_book">Новая книга</string>
+    <string name="calendar">Календарь</string>
+    <string name="statistics">Статистика</string>
+    <string name="map">Карта</string>
+    <string name="back">Назад</string>
+    <string name="book_cover">Обложка книги</string>
+    <string name="delete_book">Удалить книгу</string>
+</resources>
