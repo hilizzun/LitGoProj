@@ -11,28 +11,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication">
-
-        <!-- MainActivity (если нужна) -->
         <activity
             android:name=".MainActivity"
-            android:exported="false" />
-
-        <!-- WelcomeActivity - главный экран -->
-        <activity
-            android:name=".WelcomeActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <!-- Остальные Activity -->
-        <activity android:name=".CollectionActivity" />
-        <activity android:name=".BookDetailActivity" />
-        <activity android:name=".StatisticsActivity" />
-        <activity android:name=".MapActivity" />
-
     </application>
 
 </manifest>

@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
     android:padding="16dp">
 
     <!-- Book Cover -->
@@ -11,19 +14,23 @@
         android:layout_width="57dp"
         android:layout_height="77dp"
         android:scaleType="centerCrop"
-        android:background="@drawable/bg_book_cover" />
+        android:background="@drawable/bg_book_cover"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Note Info -->
+    <!-- Note Info Container -->
     <LinearLayout
+        android:id="@+id/noteInfoContainer"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:orientation="vertical"
-        android:layout_marginStart="16dp">
+        android:layout_marginStart="16dp"
+        app:layout_constraintStart_toEndOf="@id/noteCoverImageView"
+        app:layout_constraintEnd_toStartOf="@id/btnDelete"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <!-- Date -->
         <TextView
-            android:id="@+id/dateTextView"
+            android:id="@+id/tvDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="7.09.2023 в 12:03"
@@ -32,9 +39,8 @@
             android:textColor="#203D43"
             android:fontFamily="@font/nunito_bold" />
 
-        <!-- Book Name -->
         <TextView
-            android:id="@+id/noteBookNameTextView"
+            android:id="@+id/tvBookName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Мастер и Маргарита"
@@ -44,9 +50,8 @@
             android:fontFamily="@font/nunito_bold"
             android:layout_marginTop="4dp" />
 
-        <!-- Pages Read -->
         <TextView
-            android:id="@+id/pagesReadTextView"
+            android:id="@+id/tvPages"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="20 страниц"
@@ -55,15 +60,25 @@
             android:textColor="#ffaf1a"
             android:fontFamily="@font/nunito_extrabold"
             android:layout_marginTop="8dp" />
-
     </LinearLayout>
 
     <!-- Delete Button -->
     <ImageView
-        android:id="@+id/deleteNoteButton"
+        android:id="@+id/btnDelete"
         android:layout_width="17dp"
         android:layout_height="17dp"
         android:src="@drawable/ic_delete"
-        android:layout_gravity="top" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</LinearLayout>
+    <!-- Divider -->
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="12dp"
+        android:background="#E0E0E0"
+        app:layout_constraintTop_toBottomOf="@id/noteInfoContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

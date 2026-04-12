@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF">
+    android:background="#FFFFFF"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,7 +17,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Новая книга"
+            android:text="@string/new_book"
             android:textSize="32sp"
             android:textStyle="bold"
             android:textColor="#203D43"
@@ -31,12 +33,14 @@
             android:layout_marginTop="16dp">
 
             <EditText
+                android:id="@+id/apiSearchEditText"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:hint="Автоматический поиск через API"
                 android:background="@null"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:inputType="text" />
 
             <ImageView
                 android:layout_width="24dp"
@@ -60,7 +64,8 @@
             android:layout_height="39dp"
             android:background="@drawable/bg_search"
             android:padding="10dp"
-            android:layout_marginTop="4dp" />
+            android:layout_marginTop="4dp"
+            android:inputType="text" />
 
         <!-- Author Input -->
         <TextView
@@ -78,7 +83,8 @@
             android:layout_height="39dp"
             android:background="@drawable/bg_search"
             android:padding="10dp"
-            android:layout_marginTop="4dp" />
+            android:layout_marginTop="4dp"
+            android:inputType="textPersonName" />
 
         <!-- Year Input -->
         <TextView
@@ -96,7 +102,8 @@
             android:layout_height="39dp"
             android:background="@drawable/bg_search"
             android:padding="10dp"
-            android:layout_marginTop="4dp" />
+            android:layout_marginTop="4dp"
+            android:inputType="number" />
 
         <!-- Cover Upload -->
         <TextView
@@ -136,7 +143,8 @@
             android:background="@drawable/bg_search"
             android:padding="10dp"
             android:gravity="top"
-            android:layout_marginTop="4dp" />
+            android:layout_marginTop="4dp"
+            android:inputType="textMultiLine" />
 
         <!-- Pages Count -->
         <TextView
@@ -154,7 +162,8 @@
             android:layout_height="39dp"
             android:background="@drawable/bg_search"
             android:padding="10dp"
-            android:layout_marginTop="4dp" />
+            android:layout_marginTop="4dp"
+            android:inputType="number" />
 
         <!-- Genre Selector -->
         <TextView

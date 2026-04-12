@@ -22,4 +22,5 @@
     <string name="back">Назад</string>
     <string name="book_cover">Обложка книги</string>
     <string name="delete_book">Удалить книгу</string>
+    <string name="new_entry">Новая запись</string>
 </resources>

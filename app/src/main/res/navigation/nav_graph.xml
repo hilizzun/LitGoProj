@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/startFragment">
+
+    <fragment
+        android:id="@+id/startFragment"
+        android:name="com.example.myapplication.StartFragment"
+        android:label="StartFragment"
+        tools:layout="@layout/fragment_start">
+        <action
+            android:id="@+id/action_startFragment_to_collectionFragment"
+            app:destination="@id/collectionFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/collectionFragment"
+        android:name="com.example.myapplication.CollectionFragment"
+        android:label="CollectionFragment"
+        tools:layout="@layout/fragment_collection">
+        <action
+            android:id="@+id/action_collection_to_add_book"
+            app:destination="@id/addBookFragment" />
+        <action
+            android:id="@+id/action_collection_to_detail"
+            app:destination="@id/detailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/addBookFragment"
+        android:name="com.example.myapplication.AddBookFragment"
+        android:label="AddBookFragment"
+        tools:layout="@layout/fragment_add_book" />
+
+    <fragment
+        android:id="@+id/detailFragment"
+        android:name="com.example.myapplication.DetailFragment"
+        android:label="DetailFragment"
+        tools:layout="@layout/fragment_detail" />
+
+    <fragment
+        android:id="@+id/calendarFragment"
+        android:name="com.example.myapplication.CalendarFragment"
+        android:label="CalendarFragment"
+        tools:layout="@layout/fragment_calendar">
+        <action
+            android:id="@+id/action_calendarFragment_to_createEntryFragment"
+            app:destination="@id/createEntryFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/createEntryFragment"
+        android:name="com.example.myapplication.CreateEntryFragment"
+        android:label="CreateEntryFragment"
+        tools:layout="@layout/fragment_create_entry" />
+
+    <fragment
+        android:id="@+id/statisticsFragment"
+        android:name="com.example.myapplication.StatisticsFragment"
+        android:label="StatisticsFragment"
+        tools:layout="@layout/fragment_statistics" />
+
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.example.myapplication.MapFragment"
+        android:label="MapFragment"
+        tools:layout="@layout/fragment_map" />
+</navigation>
