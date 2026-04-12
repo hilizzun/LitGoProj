@@ -18,7 +18,12 @@ class AppDatabaseHelper private constructor(context: Context) :
                 $BOOK_GENRE TEXT NOT NULL,
                 $BOOK_STATUS TEXT NOT NULL,
                 $BOOK_PROGRESS INTEGER NOT NULL,
-                $BOOK_COVER_RES INTEGER NOT NULL
+                $BOOK_COVER_RES INTEGER NOT NULL,
+                $BOOK_COVER_URI TEXT,
+                $BOOK_YEAR INTEGER NOT NULL DEFAULT 0,
+                $BOOK_DESCRIPTION TEXT NOT NULL DEFAULT '',
+                $BOOK_REVIEW TEXT NOT NULL DEFAULT '',
+                $BOOK_RATING REAL NOT NULL DEFAULT 0
             )
             """.trimIndent()
         )
@@ -52,6 +57,11 @@ class AppDatabaseHelper private constructor(context: Context) :
             put(BOOK_STATUS, book.status)
             put(BOOK_PROGRESS, book.progress)
             put(BOOK_COVER_RES, book.coverRes)
+            put(BOOK_COVER_URI, book.coverUri)
+            put(BOOK_YEAR, book.year)
+            put(BOOK_DESCRIPTION, book.description)
+            put(BOOK_REVIEW, book.review)
+            put(BOOK_RATING, book.rating)
         }
         return writableDatabase.insert(TABLE_BOOKS, null, values)
     }
@@ -76,6 +86,11 @@ class AppDatabaseHelper private constructor(context: Context) :
             val statusIndex = it.getColumnIndexOrThrow(BOOK_STATUS)
             val progressIndex = it.getColumnIndexOrThrow(BOOK_PROGRESS)
             val coverIndex = it.getColumnIndexOrThrow(BOOK_COVER_RES)
+            val coverUriIndex = it.getColumnIndexOrThrow(BOOK_COVER_URI)
+            val yearIndex = it.getColumnIndexOrThrow(BOOK_YEAR)
+            val descriptionIndex = it.getColumnIndexOrThrow(BOOK_DESCRIPTION)
+            val reviewIndex = it.getColumnIndexOrThrow(BOOK_REVIEW)
+            val ratingIndex = it.getColumnIndexOrThrow(BOOK_RATING)
 
             while (it.moveToNext()) {
                 books.add(
@@ -86,7 +101,12 @@ class AppDatabaseHelper private constructor(context: Context) :
                         genre = it.getString(genreIndex),
                         status = it.getString(statusIndex),
                         progress = it.getInt(progressIndex),
-                        coverRes = it.getInt(coverIndex)
+                        coverRes = it.getInt(coverIndex),
+                        coverUri = it.getString(coverUriIndex),
+                        year = it.getInt(yearIndex),
+                        description = it.getString(descriptionIndex),
+                        review = it.getString(reviewIndex),
+                        rating = it.getFloat(ratingIndex)
                     )
                 )
             }
@@ -115,7 +135,12 @@ class AppDatabaseHelper private constructor(context: Context) :
                 genre = it.getString(it.getColumnIndexOrThrow(BOOK_GENRE)),
                 status = it.getString(it.getColumnIndexOrThrow(BOOK_STATUS)),
                 progress = it.getInt(it.getColumnIndexOrThrow(BOOK_PROGRESS)),
-                coverRes = it.getInt(it.getColumnIndexOrThrow(BOOK_COVER_RES))
+                coverRes = it.getInt(it.getColumnIndexOrThrow(BOOK_COVER_RES)),
+                coverUri = it.getString(it.getColumnIndexOrThrow(BOOK_COVER_URI)),
+                year = it.getInt(it.getColumnIndexOrThrow(BOOK_YEAR)),
+                description = it.getString(it.getColumnIndexOrThrow(BOOK_DESCRIPTION)),
+                review = it.getString(it.getColumnIndexOrThrow(BOOK_REVIEW)),
+                rating = it.getFloat(it.getColumnIndexOrThrow(BOOK_RATING))
             )
         }
     }
@@ -141,7 +166,12 @@ class AppDatabaseHelper private constructor(context: Context) :
                 genre = it.getString(it.getColumnIndexOrThrow(BOOK_GENRE)),
                 status = it.getString(it.getColumnIndexOrThrow(BOOK_STATUS)),
                 progress = it.getInt(it.getColumnIndexOrThrow(BOOK_PROGRESS)),
-                coverRes = it.getInt(it.getColumnIndexOrThrow(BOOK_COVER_RES))
+                coverRes = it.getInt(it.getColumnIndexOrThrow(BOOK_COVER_RES)),
+                coverUri = it.getString(it.getColumnIndexOrThrow(BOOK_COVER_URI)),
+                year = it.getInt(it.getColumnIndexOrThrow(BOOK_YEAR)),
+                description = it.getString(it.getColumnIndexOrThrow(BOOK_DESCRIPTION)),
+                review = it.getString(it.getColumnIndexOrThrow(BOOK_REVIEW)),
+                rating = it.getFloat(it.getColumnIndexOrThrow(BOOK_RATING))
             )
         }
     }
@@ -155,6 +185,11 @@ class AppDatabaseHelper private constructor(context: Context) :
             put(BOOK_STATUS, book.status)
             put(BOOK_PROGRESS, book.progress)
             put(BOOK_COVER_RES, book.coverRes)
+            put(BOOK_COVER_URI, book.coverUri)
+            put(BOOK_YEAR, book.year)
+            put(BOOK_DESCRIPTION, book.description)
+            put(BOOK_REVIEW, book.review)
+            put(BOOK_RATING, book.rating)
         }
         return writableDatabase.update(
             TABLE_BOOKS,
@@ -244,9 +279,39 @@ class AppDatabaseHelper private constructor(context: Context) :
 
     private fun seedInitialData(db: SQLiteDatabase) {
         val books = listOf(
-            Book("0", "Мастер и Маргарита", "Михаил Булгаков", "Роман", "Читаю", 63, R.drawable.cover_master),
-            Book("0", "1984", "Джордж Оруэлл", "Антиутопия", "В планах", 0, R.drawable.cover_1984),
-            Book("0", "Преступление и наказание", "Федор Достоевский", "Роман", "Прочитано", 100, R.drawable.cover_master)
+            Book(
+                id = "0",
+                title = "Мастер и Маргарита",
+                author = "Михаил Булгаков",
+                genre = "Роман",
+                status = "Читаю",
+                progress = 63,
+                coverRes = R.drawable.cover_master,
+                year = 1967,
+                description = "Мистический роман о добре и зле, любви и свободе."
+            ),
+            Book(
+                id = "0",
+                title = "1984",
+                author = "Джордж Оруэлл",
+                genre = "Антиутопия",
+                status = "В планах",
+                progress = 0,
+                coverRes = R.drawable.cover_1984,
+                year = 1949,
+                description = "Антиутопия о тотальном контроле и манипуляции сознанием."
+            ),
+            Book(
+                id = "0",
+                title = "Преступление и наказание",
+                author = "Федор Достоевский",
+                genre = "Роман",
+                status = "Прочитано",
+                progress = 100,
+                coverRes = R.drawable.cover_master,
+                year = 1866,
+                description = "Психологический роман о вине, раскаянии и нравственном выборе."
+            )
         )
 
         books.forEach { book ->
@@ -257,6 +322,11 @@ class AppDatabaseHelper private constructor(context: Context) :
                 put(BOOK_STATUS, book.status)
                 put(BOOK_PROGRESS, book.progress)
                 put(BOOK_COVER_RES, book.coverRes)
+                put(BOOK_COVER_URI, book.coverUri)
+                put(BOOK_YEAR, book.year)
+                put(BOOK_DESCRIPTION, book.description)
+                put(BOOK_REVIEW, book.review)
+                put(BOOK_RATING, book.rating)
             }
             db.insert(TABLE_BOOKS, null, values)
         }
@@ -264,7 +334,7 @@ class AppDatabaseHelper private constructor(context: Context) :
 
     companion object {
         private const val DATABASE_NAME = "litgo.db"
-        private const val DATABASE_VERSION = 1
+        private const val DATABASE_VERSION = 2
 
         private const val TABLE_BOOKS = "books"
         private const val BOOK_ID = "id"
@@ -274,6 +344,11 @@ class AppDatabaseHelper private constructor(context: Context) :
         private const val BOOK_STATUS = "status"
         private const val BOOK_PROGRESS = "progress"
         private const val BOOK_COVER_RES = "cover_res"
+        private const val BOOK_COVER_URI = "cover_uri"
+        private const val BOOK_YEAR = "year"
+        private const val BOOK_DESCRIPTION = "description"
+        private const val BOOK_REVIEW = "review"
+        private const val BOOK_RATING = "rating"
 
         private const val TABLE_NOTES = "notes"
         private const val NOTE_ID = "id"
