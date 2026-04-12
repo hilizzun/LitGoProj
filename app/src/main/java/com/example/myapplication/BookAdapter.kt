@@ -10,12 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 
 class BookAdapter : RecyclerView.Adapter<BookAdapter.BookViewHolder>() {
     var onBookClick: ((Book) -> Unit)? = null
+    var onBookLongClick: ((Book) -> Unit)? = null
 
-    private var books = listOf(
-        Book("1","Мастер и Маргарита", "Михаил Булгаков", "Роман", "Читаю", 63, R.drawable.cover_master),
-        Book("2","1984", "Джордж Оруэлл", "Антиутопия", "В планах", 0, R.drawable.cover_1984),
-        Book("3","Преступление и наказание", "Фёдор Достоевский", "Роман", "Прочитано", 100, R.drawable.cover_master)
-    )
+    private var books = emptyList<Book>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -37,7 +34,18 @@ class BookAdapter : RecyclerView.Adapter<BookAdapter.BookViewHolder>() {
                     onBookClick?.invoke(books[position])
                 }
             }
+
+            itemView.setOnLongClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    onBookLongClick?.invoke(books[position])
+                    true
+                } else {
+                    false
+                }
+            }
         }
+
         fun bind(book: Book) {
             itemView.findViewById<ImageView>(R.id.coverImageView).setImageResource(book.coverRes)
             itemView.findViewById<TextView>(R.id.titleTextView).text = book.title
@@ -45,12 +53,10 @@ class BookAdapter : RecyclerView.Adapter<BookAdapter.BookViewHolder>() {
             itemView.findViewById<TextView>(R.id.genreTextView).text = book.genre
             itemView.findViewById<TextView>(R.id.statusTextView).text = book.status
 
-            // Исправление: используем правильный id прогресс-бара
             val progressBar = itemView.findViewById<ProgressBar>(R.id.progress_container)
             progressBar.max = 100
             progressBar.progress = book.progress
 
-            // Добавляем отображение процента
             val percentTextView = itemView.findViewById<TextView>(R.id.progressPercentTextView)
             percentTextView.text = "${book.progress}%"
         }
