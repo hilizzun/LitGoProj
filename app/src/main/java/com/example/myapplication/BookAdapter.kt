@@ -47,7 +47,7 @@ class BookAdapter : RecyclerView.Adapter<BookAdapter.BookViewHolder>() {
         }
 
         fun bind(book: Book) {
-            itemView.findViewById<ImageView>(R.id.coverImageView).setImageResource(book.coverRes)
+            itemView.findViewById<ImageView>(R.id.coverImageView).loadBookCover(book.coverUri, book.coverRes)
             itemView.findViewById<TextView>(R.id.titleTextView).text = book.title
             itemView.findViewById<TextView>(R.id.authorTextView).text = book.author
             itemView.findViewById<TextView>(R.id.genreTextView).text = book.genre
