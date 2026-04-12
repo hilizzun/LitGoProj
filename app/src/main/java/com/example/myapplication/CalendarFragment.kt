@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,6 +16,7 @@ class CalendarFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var notesAdapter: NotesAdapter
+    private lateinit var dbHelper: AppDatabaseHelper
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,21 +30,31 @@ class CalendarFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        dbHelper = AppDatabaseHelper.getInstance(requireContext())
         setupNotesRecyclerView()
+        loadNotes()
 
-        val fabAdd = view.findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(R.id.fabAdd)
-        fabAdd.setOnClickListener {
+        binding.fabAdd.setOnClickListener {
             findNavController().navigate(R.id.action_calendarFragment_to_createEntryFragment)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (this::dbHelper.isInitialized) {
+            loadNotes()
         }
     }
 
     private fun setupNotesRecyclerView() {
         notesAdapter = NotesAdapter(
             onNoteClick = { note ->
-                // TODO: Обработка клика
+                Toast.makeText(requireContext(), "Запись: ${note.bookTitle}", Toast.LENGTH_SHORT).show()
             },
             onDeleteClick = { note ->
-                // TODO: Обработка удаления
+                dbHelper.deleteNote(note.id)
+                loadNotes()
+                Toast.makeText(requireContext(), "Запись удалена", Toast.LENGTH_SHORT).show()
             }
         )
 
@@ -50,15 +62,11 @@ class CalendarFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = notesAdapter
         }
-
-        notesAdapter.submitList(getSampleNotes())
     }
 
-    private fun getSampleNotes() = listOf(
-        Note("1","7.09.2023 в 12:03", "Мастер и Маргарита", "20 страниц", R.drawable.cover_master),
-        Note("2","7.09.2023 в 12:03", "Мастер и Маргарита", "20 страниц", R.drawable.cover_master),
-        Note("3","7.09.2023 в 12:03", "Мастер и Маргарита", "20 страниц", R.drawable.cover_master)
-    )
+    private fun loadNotes() {
+        notesAdapter.submitList(dbHelper.getAllNotes())
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

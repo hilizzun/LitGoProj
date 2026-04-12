@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.myapplication.databinding.FragmentDetailBinding
@@ -12,8 +13,11 @@ class DetailFragment : Fragment() {
 
     private var _binding: FragmentDetailBinding? = null
     private val binding get() = _binding!!
-    private var currentPage = 205
-    private var totalPages = 390
+
+    private lateinit var dbHelper: AppDatabaseHelper
+    private var currentBook: Book? = null
+    private var currentPage = 0
+    private val totalPages = 100
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,50 +31,72 @@ class DetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        arguments?.let {
-            val title = it.getString("title", "")
-            val author = it.getString("author", "")
-            val genre = it.getString("genre", "")
-            val status = it.getString("status", "")
-            val progress = it.getInt("progress", 0)
-            val coverRes = it.getInt("coverRes", R.drawable.cover_master)
+        dbHelper = AppDatabaseHelper.getInstance(requireContext())
 
-            binding.bookTitleTextView.text = title
-            binding.authorTextView.text = author
-            binding.genreTextView.text = genre
-            binding.statusTextView.text = status
-            binding.bookCoverImageView.setImageResource(coverRes)
-
-            // Пример для страниц (в реальности нужно знать общее количество страниц)
-            val totalPages = 390 // или получить из аргументов
-            binding.pageCounterTextView.text = "Текущая страница: $progress / $totalPages"
+        val bookId = arguments?.getString("bookId")
+        if (bookId.isNullOrBlank()) {
+            Toast.makeText(requireContext(), "Книга не найдена", Toast.LENGTH_SHORT).show()
+            findNavController().popBackStack()
+            return
         }
 
-        // Обработка кнопки "Назад"
+        loadBook(bookId)
+
         binding.backButton.setOnClickListener {
             findNavController().popBackStack()
         }
 
-        // Обработка кнопок +/- для страниц
         binding.incrementButton.setOnClickListener {
             if (currentPage < totalPages) {
                 currentPage++
-                updatePageCounter()
+                saveProgress()
             }
         }
 
         binding.decrementButton.setOnClickListener {
             if (currentPage > 0) {
                 currentPage--
-                updatePageCounter()
+                saveProgress()
             }
         }
     }
 
+    private fun loadBook(bookId: String) {
+        val book = dbHelper.getBookById(bookId)
+        if (book == null) {
+            Toast.makeText(requireContext(), "Книга не найдена", Toast.LENGTH_SHORT).show()
+            findNavController().popBackStack()
+            return
+        }
+
+        currentBook = book
+        currentPage = book.progress.coerceIn(0, totalPages)
+
+        binding.bookTitleTextView.text = book.title
+        binding.authorTextView.text = book.author
+        binding.genreTextView.text = book.genre
+        binding.statusTextView.text = book.status
+        binding.bookCoverImageView.setImageResource(book.coverRes)
+        updatePageCounter()
+    }
+
+    private fun saveProgress() {
+        val book = currentBook ?: return
+        val newStatus = when {
+            currentPage == 0 -> "В планах"
+            currentPage == 100 -> "Прочитано"
+            else -> "Читаю"
+        }
+
+        val updated = book.copy(progress = currentPage, status = newStatus)
+        dbHelper.updateBook(updated)
+        currentBook = updated
+        binding.statusTextView.text = updated.status
+        updatePageCounter()
+    }
+
     private fun updatePageCounter() {
-        val progress = if (totalPages > 0) (currentPage * 100 / totalPages) else 0
         binding.pageCounterTextView.text = "Текущая страница: $currentPage / $totalPages"
-        // TODO: обновить прогресс в книге (пока просто текст)
     }
 
     override fun onDestroyView() {

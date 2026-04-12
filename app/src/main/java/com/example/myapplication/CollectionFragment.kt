@@ -1,10 +1,13 @@
 package com.example.myapplication
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.os.bundleOf
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,6 +19,9 @@ class CollectionFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var bookAdapter: BookAdapter
+    private lateinit var dbHelper: AppDatabaseHelper
+    private var allBooks: List<Book> = emptyList()
+    private var activeFilter: String = FILTER_ALL
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,39 +35,31 @@ class CollectionFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Настройка RecyclerView
+        dbHelper = AppDatabaseHelper.getInstance(requireContext())
         setupRecyclerView()
-        bookAdapter.updateBooks(getSampleBooks())
+        setupFilters()
+        setupSearch()
+        loadBooks()
 
-        // Обработка нажатия на FAB (Новая книга)
         binding.fabAdd.setOnClickListener {
             findNavController().navigate(R.id.action_collection_to_add_book)
         }
 
-        // Обработка клика по книге (переход к деталям)
         bookAdapter.onBookClick = { book ->
-            val bundle = bundleOf(
-                "bookId" to book.id,
-                "title" to book.title,
-                "author" to book.author,
-                "genre" to book.genre,
-                "status" to book.status,
-                "progress" to book.progress,
-                "coverRes" to book.coverRes
-            )
+            val bundle = bundleOf("bookId" to book.id)
             findNavController().navigate(R.id.action_collection_to_detail, bundle)
         }
 
-        // Настройка фильтров (табов)
-        setupFilters()
+        bookAdapter.onBookLongClick = { book ->
+            showDeleteDialog(book)
+        }
     }
 
-    private fun getSampleBooks(): List<Book> {
-        return listOf(
-            Book("1", "Мастер и Маргарита", "Михаил Булгаков", "Роман", "Читаю", 63, R.drawable.cover_master),
-            Book("2", "1984", "Джордж Оруэлл", "Антиутопия", "В планах", 0, R.drawable.cover_1984),
-            Book("3", "Преступление и наказание", "Фёдор Достоевский", "Роман", "Прочитано", 100, R.drawable.cover_master)
-        )
+    override fun onResume() {
+        super.onResume()
+        if (this::dbHelper.isInitialized) {
+            loadBooks()
+        }
     }
 
     private fun setupRecyclerView() {
@@ -72,25 +70,69 @@ class CollectionFragment : Fragment() {
         }
     }
 
-    private fun setupFilters() {
-        binding.tabAll.setOnClickListener { updateFilter(it) }
-        binding.tabReading.setOnClickListener { updateFilter(it) }
-        binding.tabRead.setOnClickListener { updateFilter(it) }
-        binding.tabPlanned.setOnClickListener { updateFilter(it) }
+    private fun setupSearch() {
+        binding.searchEditText.doAfterTextChanged {
+            applyFilterAndSearch()
+        }
     }
 
-    private fun updateFilter(selectedView: View) {
-        // Сброс цвета всех кнопок
+    private fun setupFilters() {
+        binding.tabAll.setOnClickListener { setFilter(FILTER_ALL, it) }
+        binding.tabReading.setOnClickListener { setFilter(FILTER_READING, it) }
+        binding.tabRead.setOnClickListener { setFilter(FILTER_READ, it) }
+        binding.tabPlanned.setOnClickListener { setFilter(FILTER_PLANNED, it) }
+        setFilter(FILTER_ALL, binding.tabAll)
+    }
+
+    private fun setFilter(filter: String, selectedView: View) {
+        activeFilter = filter
         listOf(binding.tabAll, binding.tabReading, binding.tabRead, binding.tabPlanned).forEach {
             it.setBackgroundColor(requireContext().getColor(R.color.surface))
         }
-        // Выделение выбранной
         selectedView.setBackgroundColor(requireContext().getColor(R.color.primary))
-        // TODO: фильтрация списка
+        applyFilterAndSearch()
+    }
+
+    private fun loadBooks() {
+        allBooks = dbHelper.getAllBooks()
+        applyFilterAndSearch()
+    }
+
+    private fun applyFilterAndSearch() {
+        val query = binding.searchEditText.text?.toString().orEmpty().trim()
+        val filtered = allBooks.filter { book ->
+            val filterMatch = activeFilter == FILTER_ALL || book.status == activeFilter
+            val searchMatch = query.isBlank() ||
+                book.title.contains(query, ignoreCase = true) ||
+                book.author.contains(query, ignoreCase = true)
+            filterMatch && searchMatch
+        }
+
+        bookAdapter.updateBooks(filtered)
+    }
+
+    private fun showDeleteDialog(book: Book) {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Удалить книгу")
+            .setMessage("Книга \"${book.title}\" будет удалена из коллекции.")
+            .setPositiveButton("Удалить") { _, _ ->
+                dbHelper.deleteBook(book.id)
+                loadBooks()
+                Toast.makeText(requireContext(), "Книга удалена", Toast.LENGTH_SHORT).show()
+            }
+            .setNegativeButton("Отмена", null)
+            .show()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        private const val FILTER_ALL = "ALL"
+        private const val FILTER_READING = "Читаю"
+        private const val FILTER_READ = "Прочитано"
+        private const val FILTER_PLANNED = "В планах"
     }
 }
