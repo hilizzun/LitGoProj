@@ -88,7 +88,6 @@ class DetailFragment : Fragment() {
         binding.descriptionTextView.text = if (book.description.isBlank()) "Описание не добавлено" else book.description
         binding.yearTextView.text = if (book.year > 0) "${book.year} г" else "Год не указан"
         binding.reviewEditText.setText(book.review)
-        binding.ratingBar.isIndicator = false
         binding.ratingBar.stepSize = 0.5f
         binding.ratingBar.rating = book.rating
 
