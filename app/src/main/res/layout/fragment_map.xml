@@ -47,13 +47,11 @@
             android:contentDescription="Search bookstores" />
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/mapImageView"
+    <com.yandex.mapkit.mapview.MapView
+        android:id="@+id/mapView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_margin="16dp"
-        android:scaleType="centerCrop"
-        android:contentDescription="Yandex static map with bookstores" />
+        android:layout_margin="16dp" />
 
 </LinearLayout>

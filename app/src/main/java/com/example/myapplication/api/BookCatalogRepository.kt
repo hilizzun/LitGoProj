@@ -21,11 +21,8 @@ class BookCatalogRepository(
     private val nominatimApiService: NominatimApiService = ApiClient.nominatimApi,
     private val overpassApiService: OverpassApiService = ApiClient.overpassApi
 ) {
-    suspend fun searchBookByTitle(title: String, googleApiKey: String): BookDraft? {
-        val response = googleBooksApiService.searchVolumes(
-            query = "intitle:$title",
-            key = googleApiKey.ifBlank { null }
-        )
+    suspend fun searchBookByTitle(title: String): BookDraft? {
+        val response = googleBooksApiService.searchVolumes(query = "intitle:$title")
         val volumeInfo = response.items?.firstOrNull()?.volumeInfo ?: return null
 
         val year = volumeInfo.publishedDate
