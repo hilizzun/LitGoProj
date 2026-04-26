@@ -1,4 +1,4 @@
-package com.example.myapplication
+﻿package com.example.myapplication
 
 import android.content.Intent
 import android.net.Uri
@@ -10,8 +10,11 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.example.myapplication.api.BookCatalogRepository
 import com.example.myapplication.databinding.FragmentAddBookBinding
+import kotlinx.coroutines.launch
 
 class AddBookFragment : Fragment() {
 
@@ -19,6 +22,8 @@ class AddBookFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var dbHelper: AppDatabaseHelper
+    private val repository = BookCatalogRepository()
+    private lateinit var genres: Array<String>
     private var selectedCoverUri: Uri? = null
 
     private val pickCoverLauncher = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
@@ -50,10 +55,14 @@ class AddBookFragment : Fragment() {
 
         dbHelper = AppDatabaseHelper.getInstance(requireContext())
 
-        val genres = arrayOf("Роман", "Детектив", "Фантастика", "Научная литература", "Поэзия")
+        genres = arrayOf("Роман", "Детектив", "Фантастика", "Научная литература", "Поэзия")
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, genres)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.genreSpinner.adapter = adapter
+
+        binding.apiSearchButton.setOnClickListener {
+            loadBookFromApi()
+        }
 
         binding.submitButton.setOnClickListener {
             saveBook()
@@ -61,6 +70,45 @@ class AddBookFragment : Fragment() {
 
         binding.uploadCoverButton.setOnClickListener {
             pickCoverLauncher.launch(arrayOf("image/*"))
+        }
+    }
+
+    private fun loadBookFromApi() {
+        val query = binding.apiSearchEditText.text?.toString().orEmpty().trim()
+        if (query.isBlank()) {
+            Toast.makeText(requireContext(), "Введите название книги для поиска", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        binding.apiSearchButton.isEnabled = false
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            runCatching { repository.searchBookByTitle(query) }
+                .onSuccess { draft ->
+                    if (draft == null) {
+                        Toast.makeText(requireContext(), "Книга не найдена", Toast.LENGTH_SHORT).show()
+                    } else {
+                        if (draft.title.isNotBlank()) binding.titleEditText.setText(draft.title)
+                        if (draft.author.isNotBlank()) binding.authorEditText.setText(draft.author)
+                        if (draft.year.isNotBlank()) binding.yearEditText.setText(draft.year)
+                        if (draft.description.isNotBlank()) binding.descriptionEditText.setText(draft.description)
+                        if (draft.pages.isNotBlank()) binding.pagesEditText.setText(draft.pages)
+                        if (draft.genre.isNotBlank()) setGenreFromApi(draft.genre)
+                        Toast.makeText(requireContext(), "Поля заполнены из API", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                .onFailure {
+                    Toast.makeText(requireContext(), "Ошибка запроса к API", Toast.LENGTH_SHORT).show()
+                }
+
+            binding.apiSearchButton.isEnabled = true
+        }
+    }
+
+    private fun setGenreFromApi(genre: String) {
+        val index = genres.indexOfFirst { it.equals(genre, ignoreCase = true) }
+        if (index >= 0) {
+            binding.genreSpinner.setSelection(index)
         }
     }
 

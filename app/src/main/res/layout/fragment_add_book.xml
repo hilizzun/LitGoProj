@@ -43,9 +43,13 @@
                 android:inputType="text" />
 
             <ImageView
+                android:id="@+id/apiSearchButton"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_search" />
+                android:src="@drawable/ic_search"
+                android:clickable="true"
+                android:focusable="true"
+                android:contentDescription="Search in API" />
         </LinearLayout>
 
         <!-- Title Input -->
