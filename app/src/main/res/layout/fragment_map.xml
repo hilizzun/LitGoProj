@@ -47,11 +47,22 @@
             android:contentDescription="Search bookstores" />
     </LinearLayout>
 
-    <com.yandex.mapkit.mapview.MapView
-        android:id="@+id/mapView"
+    <FrameLayout
+        android:id="@+id/mapContainer"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_margin="16dp" />
+        android:layout_margin="16dp">
+
+        <TextView
+            android:id="@+id/mapErrorTextView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="Для карты добавьте MAPKIT_API_KEY в local.properties"
+            android:textColor="@color/text_primary"
+            android:visibility="gone" />
+    </FrameLayout>
 
 </LinearLayout>

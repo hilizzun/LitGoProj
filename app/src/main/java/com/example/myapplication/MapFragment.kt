@@ -13,6 +13,7 @@ import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.map.CameraPosition
 import com.yandex.mapkit.map.MapObjectCollection
+import com.yandex.mapkit.mapview.MapView
 import com.yandex.runtime.image.ImageProvider
 import kotlinx.coroutines.launch
 
@@ -23,6 +24,7 @@ class MapFragment : Fragment() {
 
     private val repository = BookCatalogRepository()
     private var mapObjects: MapObjectCollection? = null
+    private var mapView: MapView? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,14 +39,19 @@ class MapFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         if (BuildConfig.MAPKIT_API_KEY.isBlank()) {
+            binding.mapErrorTextView.visibility = View.VISIBLE
             Toast.makeText(requireContext(), "Добавьте MAPKIT_API_KEY в local.properties", Toast.LENGTH_LONG).show()
             return
         }
 
-        binding.mapView.mapWindow.map.move(
+        val createdMapView = MapView(requireContext())
+        mapView = createdMapView
+        binding.mapContainer.addView(createdMapView)
+
+        createdMapView.mapWindow.map.move(
             CameraPosition(Point(55.751244, 37.618423), 11f, 0f, 0f)
         )
-        mapObjects = binding.mapView.mapWindow.map.mapObjects.addCollection()
+        mapObjects = createdMapView.mapWindow.map.mapObjects.addCollection()
 
         binding.mapSearchButton.setOnClickListener {
             val city = binding.mapSearchEditText.text?.toString().orEmpty().trim().ifBlank { "Москва" }
@@ -62,12 +69,12 @@ class MapFragment : Fragment() {
         super.onStart()
         if (BuildConfig.MAPKIT_API_KEY.isNotBlank()) {
             MapKitFactory.getInstance().onStart()
-            _binding?.mapView?.onStart()
+            mapView?.onStart()
         }
     }
 
     override fun onStop() {
-        _binding?.mapView?.onStop()
+        mapView?.onStop()
         if (BuildConfig.MAPKIT_API_KEY.isNotBlank()) {
             MapKitFactory.getInstance().onStop()
         }
@@ -95,7 +102,7 @@ class MapFragment : Fragment() {
                 }
 
                 stores.firstOrNull()?.let { first ->
-                    binding.mapView.mapWindow.map.move(
+                    mapView?.mapWindow?.map?.move(
                         CameraPosition(Point(first.latitude, first.longitude), 12f, 0f, 0f)
                     )
                 }
@@ -112,6 +119,7 @@ class MapFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         mapObjects = null
+        mapView = null
         _binding = null
     }
 }
