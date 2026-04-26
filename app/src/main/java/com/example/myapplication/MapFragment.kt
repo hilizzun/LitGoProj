@@ -14,7 +14,6 @@ import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.map.CameraPosition
 import com.yandex.mapkit.map.MapObjectCollection
 import com.yandex.mapkit.mapview.MapView
-import com.yandex.runtime.image.ImageProvider
 import kotlinx.coroutines.launch
 
 class MapFragment : Fragment() {
@@ -97,8 +96,7 @@ class MapFragment : Fragment() {
 
                 stores.forEach { store ->
                     val point = Point(store.latitude, store.longitude)
-                    val placemark = collection.addPlacemark(point)
-                    placemark.setIcon(ImageProvider.fromResource(requireContext(), R.drawable.ic_map))
+                    collection.addPlacemark(point)
                 }
 
                 stores.firstOrNull()?.let { first ->

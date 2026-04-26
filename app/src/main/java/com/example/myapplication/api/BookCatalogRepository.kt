@@ -21,6 +21,19 @@ class BookCatalogRepository(
     private val nominatimApiService: NominatimApiService = ApiClient.nominatimApi,
     private val overpassApiService: OverpassApiService = ApiClient.overpassApi
 ) {
+    private val fallbackStoresByCity = mapOf(
+        "москва" to listOf(
+            BookstorePoint("Читай-город (Новый Арбат)", 55.7523, 37.5922),
+            BookstorePoint("Москва (Тверская)", 55.7662, 37.6058),
+            BookstorePoint("Республика (Цветной)", 55.7713, 37.6204)
+        ),
+        "санкт-петербург" to listOf(
+            BookstorePoint("Подписные издания", 59.9361, 30.3464),
+            BookstorePoint("Буквоед (Невский)", 59.9317, 30.3555),
+            BookstorePoint("Дом Книги", 59.9358, 30.3252)
+        )
+    )
+
     suspend fun searchBookByTitle(title: String): BookDraft? {
         val response = googleBooksApiService.searchVolumes(query = "intitle:$title")
         val volumeInfo = response.items?.firstOrNull()?.volumeInfo ?: return null
@@ -53,21 +66,28 @@ class BookCatalogRepository(
         val overpassQuery = """
             [out:json][timeout:25];
             (
-              node["shop"="books"](around:20000,$centerLat,$centerLon);
-              way["shop"="books"](around:20000,$centerLat,$centerLon);
-              relation["shop"="books"](around:20000,$centerLat,$centerLon);
+              node["shop"="books"](around:35000,$centerLat,$centerLon);
+              way["shop"="books"](around:35000,$centerLat,$centerLon);
+              relation["shop"="books"](around:35000,$centerLat,$centerLon);
+              node["amenity"="bookshop"](around:35000,$centerLat,$centerLon);
+              way["amenity"="bookshop"](around:35000,$centerLat,$centerLon);
+              relation["amenity"="bookshop"](around:35000,$centerLat,$centerLon);
             );
             out center;
         """.trimIndent()
 
         val response = overpassApiService.query(overpassQuery)
-
-        return response.elements.orEmpty().mapNotNull { element ->
+        val osmStores = response.elements.orEmpty().mapNotNull { element ->
             val lat = element.lat ?: element.center?.lat ?: return@mapNotNull null
             val lon = element.lon ?: element.center?.lon ?: return@mapNotNull null
             val name = element.tags?.name ?: "Книжный магазин"
             BookstorePoint(name = name, latitude = lat, longitude = lon)
-        }
+        }.distinctBy { "${it.latitude},${it.longitude}" }
+
+        if (osmStores.isNotEmpty()) return osmStores
+
+        val normalizedCity = city.trim().lowercase()
+        return fallbackStoresByCity[normalizedCity].orEmpty()
     }
 
     private fun mapCategoryToGenre(category: String): String {
