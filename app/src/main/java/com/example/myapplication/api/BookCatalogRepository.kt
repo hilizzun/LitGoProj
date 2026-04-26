@@ -1,4 +1,4 @@
-package com.example.myapplication.api
+﻿package com.example.myapplication.api
 
 data class BookDraft(
     val title: String = "",
@@ -6,7 +6,8 @@ data class BookDraft(
     val year: String = "",
     val description: String = "",
     val pages: String = "",
-    val genre: String = ""
+    val genre: String = "",
+    val coverUrl: String = ""
 )
 
 data class BookstorePoint(
@@ -17,11 +18,14 @@ data class BookstorePoint(
 
 class BookCatalogRepository(
     private val googleBooksApiService: GoogleBooksApiService = ApiClient.googleBooksApi,
-    private val yandexPlacesApiService: YandexPlacesApiService = ApiClient.yandexPlacesApi
+    private val nominatimApiService: NominatimApiService = ApiClient.nominatimApi,
+    private val overpassApiService: OverpassApiService = ApiClient.overpassApi
 ) {
-
-    suspend fun searchBookByTitle(title: String): BookDraft? {
-        val response = googleBooksApiService.searchVolumes(query = "intitle:$title")
+    suspend fun searchBookByTitle(title: String, googleApiKey: String): BookDraft? {
+        val response = googleBooksApiService.searchVolumes(
+            query = "intitle:$title",
+            key = googleApiKey.ifBlank { null }
+        )
         val volumeInfo = response.items?.firstOrNull()?.volumeInfo ?: return null
 
         val year = volumeInfo.publishedDate
@@ -29,14 +33,7 @@ class BookCatalogRepository(
             ?.filter { it.isDigit() }
             .orEmpty()
 
-        val genreFromApi = volumeInfo.categories?.firstOrNull().orEmpty()
-        val mappedGenre = when {
-            genreFromApi.contains("fiction", ignoreCase = true) -> "Фантастика"
-            genreFromApi.contains("detective", ignoreCase = true) -> "Детектив"
-            genreFromApi.contains("poetry", ignoreCase = true) -> "Поэзия"
-            genreFromApi.isBlank() -> ""
-            else -> "Научная литература"
-        }
+        val genre = mapCategoryToGenre(volumeInfo.categories?.firstOrNull().orEmpty())
 
         return BookDraft(
             title = volumeInfo.title.orEmpty(),
@@ -44,49 +41,47 @@ class BookCatalogRepository(
             year = year,
             description = volumeInfo.description.orEmpty(),
             pages = volumeInfo.pageCount?.toString().orEmpty(),
-            genre = mappedGenre
+            genre = genre,
+            coverUrl = volumeInfo.imageLinks?.thumbnail
+                ?.replace("http://", "https://")
+                .orEmpty()
         )
     }
 
-    suspend fun findBookstoresByCity(city: String, apiKey: String): List<BookstorePoint> {
-        if (apiKey.isBlank()) return emptyList()
+    suspend fun findBookstoresByCity(city: String): List<BookstorePoint> {
+        val place = nominatimApiService.search(city).firstOrNull() ?: return emptyList()
+        val centerLat = place.lat?.toDoubleOrNull() ?: return emptyList()
+        val centerLon = place.lon?.toDoubleOrNull() ?: return emptyList()
 
-        val geo = yandexPlacesApiService.search(
-            apiKey = apiKey,
-            text = city,
-            type = "geo",
-            results = 1
-        )
-        val cityCoords = geo.features
-            ?.firstOrNull()
-            ?.geometry
-            ?.coordinates
-            ?.takeIf { it.size >= 2 }
-            ?: return emptyList()
+        val overpassQuery = """
+            [out:json][timeout:25];
+            (
+              node["shop"="books"](around:20000,$centerLat,$centerLon);
+              way["shop"="books"](around:20000,$centerLat,$centerLon);
+              relation["shop"="books"](around:20000,$centerLat,$centerLon);
+            );
+            out center;
+        """.trimIndent()
 
-        val ll = "${cityCoords[0]},${cityCoords[1]}"
-        val bookstores = yandexPlacesApiService.search(
-            apiKey = apiKey,
-            text = "книжный магазин",
-            type = "biz",
-            ll = ll,
-            spn = "0.4,0.4",
-            results = 30
-        )
+        val response = overpassApiService.query(overpassQuery)
 
-        return bookstores.features.orEmpty().mapNotNull { feature ->
-            val coords = feature.geometry?.coordinates
-            if (coords == null || coords.size < 2) return@mapNotNull null
+        return response.elements.orEmpty().mapNotNull { element ->
+            val lat = element.lat ?: element.center?.lat ?: return@mapNotNull null
+            val lon = element.lon ?: element.center?.lon ?: return@mapNotNull null
+            val name = element.tags?.name ?: "Книжный магазин"
+            BookstorePoint(name = name, latitude = lat, longitude = lon)
+        }
+    }
 
-            val name = feature.properties?.companyMetaData?.name
-                ?: feature.properties?.name
-                ?: "Книжный магазин"
-
-            BookstorePoint(
-                name = name,
-                latitude = coords[1],
-                longitude = coords[0]
-            )
+    private fun mapCategoryToGenre(category: String): String {
+        if (category.isBlank()) return ""
+        val lower = category.lowercase()
+        return when {
+            "detective" in lower || "crime" in lower -> "Детектив"
+            "fantasy" in lower || "fiction" in lower || "sci-fi" in lower -> "Фантастика"
+            "poetry" in lower -> "Поэзия"
+            "romance" in lower || "novel" in lower || "classic" in lower -> "Роман"
+            else -> "Научная литература"
         }
     }
 }

@@ -18,6 +18,18 @@ object ApiClient {
         .readTimeout(20, TimeUnit.SECONDS)
         .build()
 
+    private val osmHttpClient = OkHttpClient.Builder()
+        .addInterceptor(logging)
+        .addInterceptor { chain ->
+            val request = chain.request().newBuilder()
+                .header("User-Agent", "LitGoProj/1.0 (educational-app)")
+                .build()
+            chain.proceed(request)
+        }
+        .connectTimeout(20, TimeUnit.SECONDS)
+        .readTimeout(20, TimeUnit.SECONDS)
+        .build()
+
     val googleBooksApi: GoogleBooksApiService by lazy {
         Retrofit.Builder()
             .baseUrl("https://www.googleapis.com/books/v1/")
@@ -27,12 +39,21 @@ object ApiClient {
             .create(GoogleBooksApiService::class.java)
     }
 
-    val yandexPlacesApi: YandexPlacesApiService by lazy {
+    val nominatimApi: NominatimApiService by lazy {
         Retrofit.Builder()
-            .baseUrl("https://search-maps.yandex.ru/v1/")
-            .client(httpClient)
+            .baseUrl("https://nominatim.openstreetmap.org/")
+            .client(osmHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(YandexPlacesApiService::class.java)
+            .create(NominatimApiService::class.java)
+    }
+
+    val overpassApi: OverpassApiService by lazy {
+        Retrofit.Builder()
+            .baseUrl("https://overpass-api.de/")
+            .client(osmHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(OverpassApiService::class.java)
     }
 }
